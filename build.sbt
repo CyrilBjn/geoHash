@@ -1,9 +1,9 @@
 ThisBuild / version := "0.1.0-SNAPSHOT"
-ThisBuild / scalaVersion := "2.13.8"
+ThisBuild / scalaVersion := "2.12.14"
 lazy val sparkVersion = "3.2.1"
 name := "geoHash"
 version := "1.0"
-scalaVersion := "2.13.8"
+scalaVersion := "2.12.14"
 lazy val root = (project in file("."))
   .settings(
     name := "geoHash",
