@@ -2,7 +2,11 @@ package octo.mentoring.project
 
 
 import SparkTool.SparkTool.udfEncode
+
+import octo.mentoring.project.tree.hash2TreeConverter
+import octo.mentoring.project.tree.hash2TreeConverter.buildHashTree
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions.lit
 
 object Main {
   def main(args: Array[String]): Unit = {
@@ -18,9 +22,14 @@ object Main {
     val geoHashDf = df
       .withColumn("geoHash", udfEncode($"lat",$"lng"))
 
-    val geoHashArray = geoHashDf.select("geoHash").map(f=>f.getString(0)).collect
-    println(geoHashArray)
+    val geoHashList = geoHashDf.select("geoHash").map(f=>f.getString(0)).collect
+    val tree = hash2TreeConverter(geoHashList)
+    val resultData = geoHashDf.withColumn("unique_prefix", tree.udfFindUniquePrefix($"geohash", lit(12)))
 
+    resultData.show(false)
+    println(resultData.count())
+    println(resultData.dropDuplicates("unique_prefix").count())
+    println(resultData.dropDuplicates("geoHash").count())
 
   }
 }

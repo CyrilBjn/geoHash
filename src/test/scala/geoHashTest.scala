@@ -1,7 +1,9 @@
 package octo.mentoring.project
 
-import hash.GeoHash.{Interval, encode, mixList, toBit}
+import hash.GeoHash.{Interval, encode, encodeInBit, mixList}
 import hash.Base32
+
+import octo.mentoring.project.tree.HashTreeNode
 import org.scalatest.funsuite.AnyFunSuite
 
 class geoHashTest extends AnyFunSuite{
@@ -21,7 +23,7 @@ class geoHashTest extends AnyFunSuite{
 
   test("Encoder en Bit un double"){
     val latitude = 48.868670
-    val bits = toBit(latitude, Interval(-90.0, 90.0), 12)
+    val bits = encodeInBit(latitude, Interval(-90.0, 90.0), 12)
     assert(bits == List(true, true, false, false, false, true, false, true, true, false, false, false))
   }
 
@@ -30,6 +32,17 @@ class geoHashTest extends AnyFunSuite{
     val list2 = List("b","d","f")
     val mixedList = mixList(list1, list2)
     assert(mixedList == List("a", "b", "c", "d", "e", "f"))
+  }
+
+  test("Trie Append"){
+    val trie = new HashTreeNode()
+    trie.append("Maurício")
+    println(trie.toString())
+    trie.append("San Francisco")
+    trie.append("San Diego")
+    trie.append("Santo Domingo")
+    trie.append("São Paulo")
+    println(trie.toString())
   }
 
 }
